@@ -10,9 +10,15 @@ jobs:
         run: |
           sudo apt update
           sudo apt install xfce4 xfce4-goodies tightvncserver git -y
-          vncserver :1
-          vncserver -kill :1
+
+      - name: Create VNC password
+        run: |
           mkdir -p ~/.vnc
+          echo "P@ssw0rd" | vncpasswd -f > ~/.vnc/passwd
+          chmod 600 ~/.vnc/passwd
+
+      - name: Setup VNC xstartup
+        run: |
           echo "#!/bin/bash
           xrdb $HOME/.Xresources
           startxfce4 &" > ~/.vnc/xstartup
