@@ -9,10 +9,25 @@ jobs:
       - name: Install Desktop Environment & VNC
         run: |
           sudo apt update
-          sudo apt install xfce4 xfce4-goodies tightvncserver git curl -y
+          sudo apt install xfce4 xfce4-goodies tightvncserver git curl expect -y
+          
+          # create vnc password non-interactively
+          mkdir -p ~/.vnc
+          echo "#!/usr/bin/expect
+          spawn vncpasswd
+          expect \"Password:\"
+          send \"P@ssw0rd\n\"
+          expect \"Verify:\"
+          send \"P@ssw0rd\n\"
+          expect \"Would you like to enter a view-only password (y/n)?\"
+          send \"n\n\"
+          expect eof" > vncpassgen.exp
+          chmod +x vncpassgen.exp
+          ./vncpassgen.exp
+          
           vncserver :1
           vncserver -kill :1
-          mkdir -p ~/.vnc
+
           echo "#!/bin/bash
           xrdb $HOME/.Xresources
           startxfce4 &" > ~/.vnc/xstartup
@@ -31,4 +46,6 @@ jobs:
           chmod +x cloudflared
           nohup ./cloudflared tunnel --url http://localhost:6080 --no-autoupdate &
           sleep 10
-          echo "Open the logs below to find your public HTTPS link."
+          echo "✅ VNC is running!"
+          echo "🔑 Password = P@ssw0rd"
+          echo "🌍 Check the Cloudflare logs below for your public HTTPS link."
