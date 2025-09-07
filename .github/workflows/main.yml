@@ -16,9 +16,9 @@ jobs:
           echo "#!/usr/bin/expect
           spawn vncpasswd
           expect \"Password:\"
-          send \"P@ssw0rd\n\"
+          send \"123456\n\"
           expect \"Verify:\"
-          send \"P@ssw0rd\n\"
+          send \"123456\n\"
           expect \"Would you like to enter a view-only password (y/n)?\"
           send \"n\n\"
           expect eof" > vncpassgen.exp
@@ -47,5 +47,5 @@ jobs:
           nohup ./cloudflared tunnel --url http://localhost:6080 --no-autoupdate &
           sleep 10
           echo "✅ VNC is running!"
-          echo "🔑 Password = P@ssw0rd"
+          echo "🔑 Password = 123456"
           echo "🌍 Check the Cloudflare logs below for your public HTTPS link."
